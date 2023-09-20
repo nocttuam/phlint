@@ -1,0 +1,22 @@
+{
+    "name": "nocttuam/plint",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kleyson Costa",
+            "email": "kleyson.git@coruja.dev.br"
+        }
+    ],
+
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "phpstan-rules.neon"
+            ]
+        }
+    }
+}
