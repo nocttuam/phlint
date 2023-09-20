@@ -9,15 +9,15 @@
   ],
   "require": {
     "friendsofphp/php-cs-fixer": "^3.22",
+    "phpcsstandards/phpcsextra": "^1.0",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-deprecation-rules": "^1.1",
     "phpstan/phpstan-mockery": "^1.1",
     "phpstan/phpstan-strict-rules": "^1.5",
-    "spaze/phpstan-disallowed-calls": "^2.16",
-    "symplify/phpstan-rules": "12.2.7.72",
-    "phpcsstandards/phpcsextra": "^1.0",
     "slevomat/coding-standard": "^8.13",
-    "squizlabs/php_codesniffer": "^3.7"
+    "spaze/phpstan-disallowed-calls": "^2.16",
+    "squizlabs/php_codesniffer": "^3.7",
+    "symplify/phpstan-rules": "12.2.7.72"
   },
   "suggest": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
