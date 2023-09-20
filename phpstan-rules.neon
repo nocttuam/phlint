@@ -1,0 +1,122 @@
+includes:
+  # spaze phpstan rules
+  - tools/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+  - tools/vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+
+  # symplify prepared sets
+  - tools/vendor/symplify/phpstan-rules/config/regex-rules.neon
+  - tools/vendor/symplify/phpstan-rules/config/test-rules.neon
+
+rules:
+  ### Static Rules(vendor/symplify/phpstan-rules/config/static-rules.neon) ###
+  - Symplify\PHPStanRules\Rules\NoProtectedClassElementRule
+
+  - Symplify\PHPStanRules\Rules\Spotter\IfElseToMatchSpotterRule
+  - Symplify\PHPStanRules\Rules\Missing\CheckSprintfMatchingTypesRule
+
+  # domain
+  - Symplify\PHPStanRules\Rules\Domain\RequireExceptionNamespaceRule
+  - Symplify\PHPStanRules\Rules\Domain\RequireAttributeNamespaceRule
+  - Symplify\PHPStanRules\Rules\CheckAttributteArgumentClassExistsRule
+  - Symplify\PHPStanRules\Rules\Enum\RequireUniqueEnumConstantRule
+  - Symplify\PHPStanRules\Rules\ForbiddenParamTypeRemovalRule
+  - Symplify\PHPStanRules\Rules\PreventParentMethodVisibilityOverrideRule
+
+  # paths
+  - Symplify\PHPStanRules\Rules\NoMissingDirPathRule
+  - Symplify\PHPStanRules\Rules\NoReferenceRule
+  - Symplify\PHPStanRules\Rules\NoArrayAccessOnObjectRule
+
+  - Symplify\PHPStanRules\Rules\NoNullableArrayPropertyRule
+  - Symplify\PHPStanRules\Rules\BoolishClassMethodPrefixRule
+
+  # dead-code
+  - Symplify\PHPStanRules\Rules\NoIssetOnObjectRule
+
+  # explicit naming
+  - Symplify\PHPStanRules\Rules\NoDefaultExceptionRule
+  - Symplify\PHPStanRules\Rules\NoParentMethodCallOnNoOverrideProcessRule
+  - Symplify\PHPStanRules\Rules\ForbiddenMultipleClassLikeInOneFileRule
+
+  # comlexity
+  - Symplify\PHPStanRules\Rules\Complexity\ForbiddenSameNamedNewInstanceRule
+  - Symplify\PHPStanRules\Rules\NarrowType\NoReturnFalseInNonBoolClassMethodRule
+
+  - Symplify\PHPStanRules\Rules\Complexity\ForbiddenArrayMethodCallRule
+  - Symplify\PHPStanRules\Rules\ForbiddenThisArgumentRule
+  - Symplify\PHPStanRules\Rules\CheckRequiredInterfaceInContractNamespaceRule
+  - Symplify\PHPStanRules\Rules\NoEmptyClassRule
+
+  # naming
+  - Symplify\PHPStanRules\Rules\RequireAttributeNameRule
+
+  ### Naming Rules(vendor/symplify/phpstan-rules/config/naming-rules.neon) ###
+  - Symplify\PHPStanRules\Rules\NoReturnSetterMethodRule
+  - Symplify\PHPStanRules\Rules\NoVoidGetterMethodRule
+  - Symplify\PHPStanRules\Rules\UppercaseConstantRule
+  - Symplify\PHPStanRules\Rules\ClassNameRespectsParentSuffixRule
+  - Symplify\PHPStanRules\Rules\CheckTypehintCallerTypeRule
+  - Symplify\PHPStanRules\Rules\CheckClassNamespaceFollowPsr4Rule
+
+  ### Code Complexity Rules(vendor/symplify/phpstan-rules/config/code-complexity-rules.neon) ###
+  - Symplify\PHPStanRules\Rules\Explicit\NoMixedCallableRule
+  - Symplify\PHPStanRules\Rules\Explicit\NoMixedPropertyFetcherRule
+  - Symplify\PHPStanRules\Rules\Explicit\NoMixedMethodCallerRule
+  - Symplify\PHPStanRules\Rules\PHPUnit\NoRightPHPUnitAssertScalarRule
+  - Symplify\PHPStanRules\Rules\Enum\RequireEnumDocBlockOnConstantListPassRule
+  - Symplify\PHPStanRules\Rules\NoDynamicNameRule
+  - Symplify\PHPStanRules\Rules\Explicit\NoRelativeFilePathRule
+
+services:
+  -
+    class: Symplify\PHPStanRules\Rules\NoDuplicatedShortClassNameRule
+    tags: [ phpstan.rules.rule ]
+    arguments:
+      toleratedNestingLevel: 2
+
+  -
+    class: Symplify\PHPStanRules\ObjectCalisthenics\Rules\NoShortNameRule
+    tags: [ phpstan.rules.rule ]
+    arguments:
+      minNameLength: 3
+      allowedShortNames: [ 'id', 'to', 'up' ]
+
+  -
+    class: Symplify\PHPStanRules\Rules\ForbiddenFuncCallRule
+    tags: [ phpstan.rules.rule ]
+    arguments:
+      forbiddenFunctions:
+        d: 'seems you missed some debugging function'
+        dd: 'seems you missed some debugging function'
+        dump: 'seems you missed some debugging function'
+        var_dump: 'seems you missed some debugging function'
+
+parameters:
+  ignoreErrors:
+    # Pest implicitly binds $this to the current test case
+    # @see https://pestphp.com/docs/configuring-tests
+    -
+      message: '#^Undefined variable: \$this$#'
+      paths:
+        - tests/*
+
+    -
+      message: '#^Anonymous variable(s)? in a (("|`)(.)*("|`)) (property fetch|method call) can lead to false dead (property|methods). Make sure the variable type is known$#'
+      paths:
+        - tests/**/*.php
+
+    -
+      message: '#^Access to an undefined property Pest\\Mixins\\Expectation(.)*::(.)*\.$#'
+      paths:
+        - tests/**/*.php
+
+    - message: '#^Method "authorize\(\)" returns bool type, so the name should start with is/has/was\.\.\.$#'
+      paths:
+        - app/**/*Request.php
+
+    -
+      message: '#^Dynamic call to static method Illuminate\\(.)*::(.)*\.$#'
+
+    -
+      message: '#^Property (\w|\\)*::\$(\w)* type has no value type specified in iterable type array.$#'
+
